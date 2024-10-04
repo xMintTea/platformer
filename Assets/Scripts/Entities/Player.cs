@@ -1,8 +1,6 @@
 using System;
 using TMPro;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody), typeof(Animator))]
 public class PlayerController : Entity
@@ -78,7 +76,7 @@ public class PlayerController : Entity
     private void CoinsUpdate()
     {
         
-        CoinText.text = $"Текст: {Coins}";
+        CoinText.text = $"Монеты: {Coins}";
     }
 
     private void CoinsUpdate(GameObject coin)
@@ -113,6 +111,18 @@ public class PlayerController : Entity
         horizontalInput *= playerControllVars.maxSpeed * (accelerateCurve.Evaluate(accelerateTime) * accelerateSpeed);
 
         movement = new Vector3(horizontalInput, 0, 0);
+        
+        // Установить колайдер персонажа перпендикулярно к полу
+        Vector3 up = Vector3.up;
+        Vector3 down = Vector3.down;
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, down, out hit, 2f))
+        {
+            up = hit.normal;
+        }
+        transform.rotation = Quaternion.FromToRotation(Vector3.up, up);
+        //
+        
 
         OnMovement?.Invoke();
         // Избегаем стен
@@ -253,7 +263,10 @@ public class PlayerController : Entity
     /// </summary>
     private void OnDrawGizmos()
     {
+        Gizmos.color = Color.white;
         Gizmos.DrawLine(GroundPos.position, transform.position + Vector3.down*0.1f);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(GroundPos.position, transform.position + Vector3.down*0.5f);
     }
 
     /// <summary>
@@ -326,7 +339,7 @@ public class PlayerController : Entity
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(tag))
+        if (other.CompareTag("Coin"))
         {
             Debug.Log("Тронули Coin");
             // Удаляем монетку

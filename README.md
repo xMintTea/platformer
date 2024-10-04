@@ -46,4 +46,10 @@
 "com.unity.modules.wind": "1.0.0",
 "com.unity.modules.xr": "1.0.0"
 
+Эти точно нужны:
+"com.unity.textmeshpro": "3.0.6",
+"com.unity.modules.ui": "1.0.0",
+"com.unity.inputsystem": "1.7.0",
+"com.unity.render-pipelines.universal": "14.0.11"
+
 P.S Либы не когда не помещались. Буду признателен если кто то удалит лишние.

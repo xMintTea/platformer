@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace.CoreMechanicObjects;
 using UnityEngine;
 
-public class Coin : MonoBehaviour
+public class Coin : MonoBehaviour, ITriggerZone
 {
-    void Start()
+    public void OnTouch(PlayerController playerController)
     {
-        
+        Debug.Log("Поднята монета");
+        playerController.AddCoin();
+        playerController.OnCoinGet?.Invoke(gameObject);
+        Destroy(gameObject);
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        
+        transform.Rotate(Vector3.right*Time.deltaTime);
     }
 }

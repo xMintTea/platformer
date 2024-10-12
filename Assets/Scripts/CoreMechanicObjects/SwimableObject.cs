@@ -1,6 +1,10 @@
-﻿/*using UnityEngine;
+﻿using DefaultNamespace.CoreMechanicObjects;
+using UnityEngine;
 
-public class SwimableObject: MonoBehaviour
+public class SwimableObject: MonoBehaviour, ITriggerZone
 {
-    public virtual void IsSwinmming() { }
-}*/
+    public void OnTouch(PlayerController playerController)
+    {
+        //playerController.Swim();
+    }
+}

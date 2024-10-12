@@ -1,4 +1,5 @@
 using System;
+using DefaultNamespace.CoreMechanicObjects;
 using TMPro;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
@@ -12,6 +13,11 @@ public class PlayerController : Entity
     [SerializeField] private PlayerControllVars playerControllVars;
     // Количество монет
     private int Coins;
+
+    public void AddCoin(int x = 1)
+    {
+        if (x > 0) Coins += x;
+    }
     //Формула ускорения персонажа при разгоне (П.Ж ноль - Минимальная скорость, один - максимальная)
     [SerializeField] private AnimationCurve accelerateCurve;
     //Скорость(Множетель) разгона до максимальной сокрость
@@ -26,6 +32,8 @@ public class PlayerController : Entity
     private Vector3 movement;
     // RigidBody для физики персонажа
     private Rigidbody rb;
+
+    private bool IsInWater;
 
     public delegate void OnMovementEvent();
     public delegate void OnJumpEvent();
@@ -77,7 +85,6 @@ public class PlayerController : Entity
     }
     private void CoinsUpdate()
     {
-        
         CoinText.text = $"Текст: {Coins}";
     }
 
@@ -175,7 +182,7 @@ public class PlayerController : Entity
             return;
         }
 
-        if (IsInWater())//Input.GetButtonDown("Swim")
+        if (IsInWater)//Input.GetButtonDown("Swim")
         {
             if (Input.GetButtonDown("Jump"))
             {
@@ -260,10 +267,10 @@ public class PlayerController : Entity
     /// Поверяет в в воде ли игрок
     /// </summary>
     /// <returns></returns>
-    bool IsInWater()
+    /*bool IsInWater()
     {
         return IsTriggering("Water", true);
-    }
+    }*/
 
     
     /*bool coinCollected = false;
@@ -305,7 +312,7 @@ public class PlayerController : Entity
     /// <param name="tag">Тег обьекта с которым мы столкнулись</param>
     /// <param name="isTrigger">Состояние(триггер, колизия) обьекта с которым мы столкнулись</param>
     /// <returns>столкновение обьекта по тегу tag с виртуальной сферой</returns>
-    bool IsTriggering(string tag, bool isTrigger = false, Action<Collider> action = null)
+    /*bool IsTriggering(string tag, bool isTrigger = false, Action<Collider> action = null)
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 0.5f);
         foreach (var hitCollider in hitColliders)
@@ -322,18 +329,14 @@ public class PlayerController : Entity
             }
         }
         return false;
-    }
+    }*/
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(tag))
+        if(other.GetComponent<ITriggerZone>() is not null) other.GetComponent<ITriggerZone>().OnTouch(this);
+        if (other.CompareTag("Water"))
         {
-            Debug.Log("Тронули Coin");
-            // Удаляем монетку
-            Destroy(other.gameObject);
-            // Увеличиваем количество монет
-            Coins++;
-            OnCoinGet?.Invoke(other.gameObject);
+            IsInWater = true;
         }
     }
 }

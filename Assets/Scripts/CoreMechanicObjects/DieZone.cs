@@ -6,7 +6,8 @@ namespace DefaultNamespace.CoreMechanicObjects
     {
         public void OnTouch(PlayerController playerController)
         {
-            Destroy(playerController.gameObject);
+            playerController.TakeDamage();
+            //Destroy(playerController.gameObject);
         }
     }
 }

@@ -1,12 +1,12 @@
 using System;
 using DefaultNamespace.CoreMechanicObjects;
 using TMPro;
-using UnityEditor.Rendering.LookDev;
+//using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody), typeof(Animator))]
-public class PlayerController : Entity
+public class PlayerController : Entity, ISpawnable
 {
     [Header("Главные настройки:")]
     // Настройки персонажа
@@ -25,6 +25,7 @@ public class PlayerController : Entity
     [SerializeField] private Transform GroundPos;
     [SerializeField] private Camera CameraMain;
     [SerializeField] private TextMeshProUGUI CoinText;
+    [SerializeField] private Transform SpawnPoint;
     
     //Таймер для ускорения(Разгон до максимальной скорости)
     private float accelerateTime;
@@ -50,8 +51,7 @@ public class PlayerController : Entity
     public OnClimbEvent OnClimb;
     public OnFlyEvent OnFly;
     public OnCoinGetEvent OnCoinGet;
-
-
+    
     // Состояния (P.S Почти рудимент не смог вписать в код)
     private enum State
     {
@@ -68,11 +68,18 @@ public class PlayerController : Entity
     private void OnEnable()
     {
         OnCoinGet += CoinsUpdate;
+        OnTakeDamage += TakeDamageBehavaior;
+    }
+
+    private void TakeDamageBehavaior()
+    {
+        transform.position = SpawnPoint.position;
     }
 
     private void OnDisable()
     {
         OnCoinGet -= CoinsUpdate;
+        OnTakeDamage -= TakeDamageBehavaior;
     }
 
     void Start()
@@ -339,4 +346,14 @@ public class PlayerController : Entity
             IsInWater = true;
         }
     }
+
+    public void SetSpawnPoint(Transform transform)
+    {
+        SpawnPoint = transform;
+    }
+}
+
+public interface ISpawnable
+{
+    void SetSpawnPoint(Transform transform);
 }

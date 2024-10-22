@@ -57,7 +57,6 @@
     <Compile Include="Assets\Scripts\Settings\Superpower.cs" />
     <Compile Include="Assets\Scripts\Interfaces\ITriggerZone.cs" />
     <Compile Include="Assets\Scripts\CoreMechanicObjects\FinishZone.cs" />
-    <Compile Include="Assets\Coin.cs" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
